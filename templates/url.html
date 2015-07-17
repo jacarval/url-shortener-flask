@@ -1,0 +1,16 @@
+<!doctype html>
+<title>shortify!</title>
+
+  <h1>shortify!</h1>
+
+  <h2>enter a URL below and I'll shorten it for you!</h2>
+
+  <form>
+    <label for="url">url: </label>
+    <input type="text" name="long-url"/>
+    <button type="submit" formmethod="post">submit</button>
+  </form>
+
+  {% if short_url and long_url %}
+    <p>{{long_url}} can now be found at <a href="http://localhost:5000/{{short_url}}">http://localhost:5000/{{short_url}}</a><p>
+  {% endif %}
