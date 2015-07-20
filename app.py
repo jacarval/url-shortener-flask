@@ -9,7 +9,7 @@ uppers = string.ascii_uppercase
 lowers = string.ascii_lowercase
 digits = string.digits
 chars = uppers + lowers + digits
-root_url = "localhost:5000/"
+root_url = "immense-plateau-4380.herokuapp.com/"
 url_dict = {"empty" : {"url" : "empty", "views" : 0}}
 
 DATABASE = 'database.db'
