@@ -1,6 +1,7 @@
 import string
 import random
 from flask import Flask, request, redirect, url_for, render_template
+from models import *
 
 app = Flask(__name__)
 
@@ -9,7 +10,6 @@ lowers = string.ascii_lowercase
 digits = string.digits
 chars = uppers + lowers + digits
 root_url = "localhost:5000/"
-
 url_dict = {"empty" : {"url" : "empty", "views" : 0}}
 
 @app.route('/')
@@ -28,9 +28,10 @@ def url():
 # uses the key to redirect to the long url
 @app.route("/<key>")
 def get_page(key):
-    if key in url_dict:
-        url_dict[key]["views"] += 1
-        return redirect("http://" + url_dict[key]["url"])
+    url = query_db('select url from entries where key = ?',[key], one=True)[0].encode('ascii')
+    # if key in url_dict:
+    #     url_dict[key]["views"] += 1
+    return redirect("http://" + url)
 
 # returns the short url as data for loading in the background
 @app.route("/get-short-url/", methods=['GET', 'POST'])
@@ -54,7 +55,8 @@ def shorten_url(long_url):
     key = "empty"
     while key in url_dict:
         key = get_random_string()
-    url_dict[key] = {"url" : long_url, "views" : 0}
+    #url_dict[key] = {"url" : long_url, "views" : 0}
+    insert_url(key, long_url, 0)
     return root_url + key
 
 # generates a random string form the ascii set
@@ -62,5 +64,8 @@ def get_random_string(size = 6, chars = chars):
     return ''.join(random.choice(chars) for _ in range(size))
 
 if __name__ == '__main__':
+    with app.app_context():
+    # within this block, current_app points to app.
+        print query_db('select * from entries')
     app.run()
     app.debug = True
