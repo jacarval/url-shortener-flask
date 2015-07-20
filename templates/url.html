@@ -6,11 +6,55 @@
   <h2>enter a URL below and I'll shorten it for you!</h2>
 
   <form>
-    <label for="url">url: </label>
-    <input type="text" name="long-url"/>
-    <button type="submit" formmethod="post">submit</button>
+    <label for="long-url">url: </label>
+    <input id="long-url" type="text" name="long-url"/>
+    <!-- <button type="submit" formmethod="post">submit</button> -->
+    <button type="button" onclick="getShortUrl()">submit</button>
   </form>
 
+
   {% if short_url and long_url %}
-    <p>{{long_url}} can now be found at <a href="http://localhost:5000/{{short_url}}">http://localhost:5000/{{short_url}}</a><p>
+    <p>{{long_url}} is now <a href="http://{{short_url}}">{{short_url}}</a><p>
   {% endif %}
+
+  <script>
+    function getShortUrl(){
+      var url = document.getElementById("long-url").value;
+      if (!url) {
+        return;
+      }
+
+      if (url.substring(0,8) == "https://"){
+        url = url.substring(8)
+      }
+
+      if (url.substring(0,7) == "http://"){
+        url = url.substring(7)
+      }
+
+      document.getElementById("long-url").value = "";
+
+      var req = new XMLHttpRequest();
+
+      req.open('POST', "get-short-url/", true);
+      req.onreadystatechange = function () {
+          if (req.readyState == 4 && req.status == 200) {
+              addUrlToPage(req, url);
+          }
+      };
+
+      req.send(url);
+    }
+
+    function addUrlToPage(req, long_url){
+      var short_url = req.responseText;
+      var element = document.createElement('div');
+      element.innerHTML = "<p id=" + short_url + ">"
+                        + long_url
+                        + " is now "
+                        + "<a href=http://" + short_url + ">" + short_url
+                        + "</p>";
+      document.body.appendChild(element);
+    }
+
+  </script>
