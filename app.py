@@ -81,7 +81,7 @@ def get_page(key):
     return redirect("http://" + url)
 
 # returns the short url as data for loading in the background
-@app.route("/get-short-url", methods=['GET', 'POST'])
+@app.route("/get-short-url/", methods=['GET', 'POST'])
 def get_short_url():
     if request.method == 'GET':
         return show_url_form()
