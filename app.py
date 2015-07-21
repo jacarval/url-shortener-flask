@@ -41,6 +41,7 @@ def get_db():
     db = getattr(g, '_database', None)
     if db is None:
         db = g._database = connect_to_database()
+        db.row_factory = sqlite3.Row
     return db
 
 @app.teardown_appcontext
@@ -93,10 +94,11 @@ def get_short_url():
 # returns all of the urls in the database
 @app.route("/get-all-urls")
 def get_all_urls():
+    urls = []
     for entry in query_db('select * from entries'):
-        print entry['url'], 'with the key', entry['key'], 'has been viewed', entry['views'], 'times'
+        urls.push([entry['url'], 'with the key', entry['key'], 'has been viewed', entry['views'], 'times'])
     #urls = query_db('select * from entries).encode('ascii')
-    return "hello world"
+    return urls
 
 # renders the form that asks the user for a url
 def show_url_form():
