@@ -91,13 +91,12 @@ def get_short_url():
         return short_url
 
 # returns all of the urls in the database
-@app.route("/get_all_urls")
+@app.route("/get-all-urls")
 def get_all_urls():
     for entry in query_db('select * from entries'):
         print entry['url'], 'with the key', entry['key'], 'has been viewed', entry['views'], 'times'
     #urls = query_db('select * from entries).encode('ascii')
     return "hello world"
-
 
 # renders the form that asks the user for a url
 def show_url_form():
@@ -108,12 +107,14 @@ def show_short_url(long_url, short_url):
 
 # this is the function that shortens the url
 def shorten_url(long_url):
-    key = "empty"
-    while key in url_dict:
+    key = ""
+    try:
         key = get_random_string()
-    #url_dict[key] = {"url" : long_url, "views" : 0}
-    insert_url(key, long_url, 0)
-    return root_url + key
+        insert_url(key, long_url, 0)
+    except:
+        shorten_url(long_url)
+    else:
+        return root_url + key
 
 # generates a random string form the ascii set
 def get_random_string(size = 6, chars = chars):
