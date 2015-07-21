@@ -5,13 +5,20 @@ from flask import Flask, request, redirect, url_for, render_template, g
 
 app = Flask(__name__)
 
+# this string is used to generate the random keys for short urls
 uppers = string.ascii_uppercase
 lowers = string.ascii_lowercase
 digits = string.digits
 chars = uppers + lowers + digits
-root_url = "immense-plateau-4380.herokuapp.com/"
-url_dict = {"empty" : {"url" : "empty", "views" : 0}}
 
+# the root directory of whatever site the app is hosted on
+root_url = "immense-plateau-4380.herokuapp.com/"
+
+# url_dict = {"empty" : {"url" : "empty", "views" : 0}}
+
+"""
+This is all the database stuff, maybe should move to a models.py file?
+"""
 DATABASE = 'database.db'
 
 def insert_url(key,url,views):
@@ -49,6 +56,9 @@ def init_db():
             db.cursor().executescript(f.read())
         db.commit()
 
+"""
+All of the routes and python functions
+"""
 @app.route('/')
 def index():
     return redirect(url_for('url'))
@@ -71,7 +81,7 @@ def get_page(key):
     return redirect("http://" + url)
 
 # returns the short url as data for loading in the background
-@app.route("/get-short-url/", methods=['GET', 'POST'])
+@app.route("/get-short-url", methods=['GET', 'POST'])
 def get_short_url():
     if request.method == 'GET':
         return show_url_form()
@@ -79,6 +89,14 @@ def get_short_url():
         long_url = request.data
         short_url = shorten_url(long_url)
         return short_url
+
+# returns all of the urls in the database
+@app.route("/get_all_urls")
+def get_all_urls():
+    for entry in query_db('select * from entries'):
+        print entry['url'], 'with the key', entry['key'], 'has been viewed', entry['views'], 'times'
+    #urls = query_db('select * from entries).encode('ascii')
+
 
 # renders the form that asks the user for a url
 def show_url_form():
