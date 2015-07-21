@@ -94,11 +94,11 @@ def get_short_url():
 # returns all of the urls in the database
 @app.route("/get-all-urls")
 def get_all_urls():
-    urls = []
+    url_list = []
     for entry in query_db('select * from entries'):
-        urls.push([entry['url'], 'with the key', entry['key'], 'has been viewed', entry['views'], 'times'])
+        url_list.append([entry['url'], 'with the key', entry['key'], 'has been viewed', entry['views'], 'times'])
     #urls = query_db('select * from entries).encode('ascii')
-    return urls
+    return str(url_list)
 
 # renders the form that asks the user for a url
 def show_url_form():
