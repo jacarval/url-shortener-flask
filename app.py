@@ -96,6 +96,7 @@ def get_all_urls():
     for entry in query_db('select * from entries'):
         print entry['url'], 'with the key', entry['key'], 'has been viewed', entry['views'], 'times'
     #urls = query_db('select * from entries).encode('ascii')
+    return "hello world"
 
 
 # renders the form that asks the user for a url
