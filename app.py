@@ -28,6 +28,13 @@ def insert_url(key,url,views):
     con.commit()
     con.close()
 
+def update_views(key):
+    con = get_db()
+    cur = con.cursor()
+    cur.execute("UPDATE entries SET views = views + 1 WHERE key=?", [key])
+    con.commit()
+    con.close()
+
 def query_db(query, args=(), one=False):
     cur = get_db().execute(query, args)
     rv = cur.fetchall()
@@ -79,6 +86,7 @@ def get_page(key):
     url = query_db('select url from entries where key = ?',[key], one=True)[0].encode('ascii')
     # if key in url_dict:
     #     url_dict[key]["views"] += 1
+    update_views(key)
     return redirect("http://" + url)
 
 # returns the short url as data for loading in the background
