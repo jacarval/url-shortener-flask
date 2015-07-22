@@ -24,7 +24,7 @@ DATABASE = 'database.db'
 def insert_url(key,url,views):
     con = get_db()
     cur = con.cursor()
-    cur.execute("INSERT INTO entries (key,url,views) VALUES (?,?,?)", (key,url,views))
+    print cur.execute("INSERT INTO entries (key,url,views) VALUES (?,?,?)", (key,url,views))
     con.commit()
     con.close()
 
